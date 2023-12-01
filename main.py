@@ -57,7 +57,7 @@ if __name__ == '__main__':
         Path(BACKBONE_RESUME_ROOT + "/" + BACKBONE_NAME).mkdir()
 
     BATCH_SIZE = 32
-    NUM_EPOCH = 100
+    NUM_EPOCH = 60
     conv_dim = 8
 
     # DEVICE = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     print("Number of Training Classes: {}".format(NUM_CLASS))
 
-    BACKBONE = NeuralODECNNClassifier(NeuralODE(ConvODEF(conv_dim*2)),
+    BACKBONE = NeuralODECNNClassifier(NeuralODE(ConvODEF(conv_dim*4)),
                                       out_dim=NUM_CLASS, conv_dim=conv_dim, loss_type=HEAD_NAME, device=DEVICE)
     LOSS = nn.CrossEntropyLoss()
 
@@ -126,7 +126,10 @@ if __name__ == '__main__':
             # compute output
             inputs = inputs.to(DEVICE)
             labels = labels.to(DEVICE).long()
-            outputs = BACKBONE(inputs.float())
+            if HEAD_NAME is not None:
+                outputs, emb = BACKBONE(inputs.float(), labels)
+            else:
+                outputs = BACKBONE(inputs.float())
             loss = LOSS(outputs, labels)
             OPTIMIZER.zero_grad()
             loss.backward()
@@ -158,7 +161,10 @@ if __name__ == '__main__':
             BACKBONE.eval()
             for img, lab in val_loader:
                 inputs, labels = img.to(DEVICE), lab.to(DEVICE).long()
-                predictions = BACKBONE(inputs.float())
+                if HEAD_NAME is not None:
+                    predictions, emb = BACKBONE(inputs.float(), labels)
+                else:
+                    predictions = BACKBONE(inputs.float())
                 val_loss = LOSS(predictions, labels)
 
                 _, val_predicted = torch.max(predictions.data, 1)

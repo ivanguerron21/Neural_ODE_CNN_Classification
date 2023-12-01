@@ -18,7 +18,7 @@ def plot_models(history, path):
 
     # Add in a title and axes labels
     plt.title('Training and Validation Loss')
-    plt.xticks(np.arange(-1,100,10))
+    plt.xticks(np.arange(-1,60,10))
     plt.xlabel('Epochs', labelpad=10)
     plt.ylabel('Loss')
     # plt.axvline(x=best_model_epochs, color='g', linestyle=(0, (5, 1)),  label='best model')
@@ -37,7 +37,7 @@ def plot_models(history, path):
 
     # Add in a title and axes labels
     plt.title('Training and Validation Accuracy')
-    plt.xticks(np.arange(-1, 100, 10))
+    plt.xticks(np.arange(-1, 60, 10))
     plt.xlabel('Epochs')
     plt.ylabel('Acc')
     # plt.axvline(x=best_model_epochs, color='g', linestyle=(0, (5, 1)), label='best model')
@@ -168,9 +168,9 @@ if __name__ == "__main__":
     if not unet_normal_path.exists():
         unet_normal_path.mkdir()
 
-    path = 'results/ViT/'
+    path = 'results/NeuralODECNNClassifier/'
     visual_path = 'results/unet_normal_visual/'
-    new_path_1 = 'backbone_resume_root/resume.csv'
+    new_path_1 = 'backbone_resume_root/NeuralODECNNClassifier/resume.csv'
     only_check_path = 'results/unet_normal_visual/mean_history_checkpoints.csv'
 
     # compress(path, new_path_1, only_check_path)

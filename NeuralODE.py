@@ -195,25 +195,42 @@ class NeuralODECNNClassifier(nn.Module):
     def __init__(self, ode, out_dim, conv_dim, loss_type=None, device='cpu'):
         super(NeuralODECNNClassifier, self).__init__()
         self.downsampling = nn.Sequential(
-            nn.Conv2d(3, conv_dim, 3, 1),
-            norm(conv_dim),
-            nn.ReLU(inplace=True),
+            # conv1
+            nn.Conv2d(3, conv_dim, 3, padding=1),
+            nn.BatchNorm2d(conv_dim),
+            nn.ReLU(),
             nn.Conv2d(conv_dim, conv_dim, 3, padding=1),
-            norm(conv_dim),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(conv_dim, conv_dim*2, 3, padding=1),
-            nn.Dropout(0.33),
+            nn.BatchNorm2d(conv_dim),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.MaxPool2d(2, stride=2),
+
+            # conv2
+            nn.Conv2d(conv_dim, conv_dim * 2, 3, padding=1),
+            nn.BatchNorm2d(conv_dim * 2),
+            nn.ReLU(),
+            nn.Conv2d(conv_dim * 2, conv_dim * 2, 3, padding=1),
+            nn.BatchNorm2d(conv_dim * 2),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.MaxPool2d(2, stride=2),
+
+            # conv3
+            nn.Conv2d(conv_dim * 2, conv_dim * 4, 3, padding=1),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+
         )
         # self.pool = nn.MaxPool2d(2, stride=2)
         self.linear_layers = nn.Sequential(
-            nn.Linear(conv_dim*2, 1000),
+            nn.Linear(conv_dim*4, 300),
         )
         self.feature = ode
-        self.norm = norm(conv_dim*2)
+        self.norm = norm(conv_dim*4)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
         if loss_type == 'CosFace':
-            self.loss = CosFace(in_features=1000, out_features=out_dim,
-                                device_id=self.GPU_ID, device=device, m=-0.02, s=75)
+            self.loss = CosFace(in_features=300, out_features=out_dim,
+                                device_id=None, device=device, m=-0.05, s=75)
 
     def forward(self, x, label=None):
         x = self.downsampling(x)
