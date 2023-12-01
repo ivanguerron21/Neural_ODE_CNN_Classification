@@ -26,7 +26,7 @@ if __name__ == '__main__':
     src_dir = "105_classes_pins_dataset"
     dst_dir = "new_dataset"
     final_data = "split_data"
-    generate_even_dataset(src_dir, dst_dir, 80)
+    generate_even_dataset(src_dir, dst_dir, 86)
     splitfolders.ratio(dst_dir, final_data, seed=33, ratio=(.7, .2, .1), group_prefix=None, move=False)
 
 
