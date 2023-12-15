@@ -43,7 +43,7 @@ if __name__ == '__main__':
     results_path = "results"
     BACKBONE_NAME = "NeuralODECNNClassifier"
     HEAD_NAME = 'CosFace'
-    IMAGE_SIZE = 32
+    IMAGE_SIZE = 16
 
     if not Path(WORK_PATH).exists():
         Path(WORK_PATH).mkdir()
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     if not Path(BACKBONE_RESUME_ROOT + "/" + BACKBONE_NAME).exists():
         Path(BACKBONE_RESUME_ROOT + "/" + BACKBONE_NAME).mkdir()
 
-    BATCH_SIZE = 32
+    BATCH_SIZE = 16
     NUM_EPOCH = 60
     conv_dim = 8
 

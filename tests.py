@@ -24,7 +24,7 @@ std = [0.229, 0.224, 0.225]
 
 
 def pre_image(image_path, model, transform_norm):
-    labels = torch.tensor(range(32))
+    labels = torch.tensor(range(16))
     labels = labels.to(DEVICE).long()
     img = Image.open(image_path)
     img_normalized = transform_norm(img).float()
@@ -57,7 +57,7 @@ def denormalize(x):
 
 
 data_transform = transforms.Compose([
-    transforms.Resize(size=(64, 64)),
+    transforms.Resize(size=(16, 16)),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
@@ -69,9 +69,9 @@ model = NeuralODECNNClassifier(NeuralODE(ConvODEF(conv_dim * 4)),
                                   out_dim=NUM_CLASS, conv_dim=conv_dim, loss_type=HEAD_NAME, device=DEVICE)
 
 classes = test_dataset.classes
-model.load_state_dict(torch.load('checkpoints/Backbone_NeuralODECNNClassifier_Epoch_5_Time_2023-11-10-18-24_checkpoint.pth'))
+model.load_state_dict(torch.load('checkpoints/Backbone_NeuralODECNNClassifier_Epoch_34_Time_2023-12-07-01-34_checkpoint.pth'))
 model.eval()
-test_loader = DataLoader(dataset=test_dataset, batch_size=32,
+test_loader = DataLoader(dataset=test_dataset, batch_size=16,
                          shuffle=True, num_workers=0, drop_last=True)
 
 pred = {}

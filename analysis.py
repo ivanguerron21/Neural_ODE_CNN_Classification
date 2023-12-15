@@ -32,8 +32,8 @@ def plot_models(history, path):
     y = history["train_acc"]
     y_1 = history["val_acc"]
 
-    plt.plot(x, signal.savgol_filter(y, 60, 4), label='Training')
-    plt.plot(x, signal.savgol_filter(y_1, 60, 4), label='Validation')
+    plt.plot(x, signal.savgol_filter(y, 60, 30), label='Training')
+    plt.plot(x, signal.savgol_filter(y_1, 60, 30), label='Validation')
 
     # Add in a title and axes labels
     plt.title('Training and Validation Accuracy')
@@ -160,13 +160,16 @@ if __name__ == "__main__":
 
     results_path = Path('results')
     vit_path = results_path / 'ViT'
-    unet_normal_path = results_path / 'CNN'
+    cnn_normal_path = results_path / 'CNN'
+    ode_path = results_path / 'NeuralODECNNClassifier'
     if not results_path.exists():
         results_path.mkdir()
     if not vit_path.exists():
         vit_path.mkdir()
-    if not unet_normal_path.exists():
-        unet_normal_path.mkdir()
+    if not cnn_normal_path.exists():
+        cnn_normal_path.mkdir()
+    if not ode_path.exists():
+        ode_path.mkdir()
 
     path = 'results/NeuralODECNNClassifier/'
     visual_path = 'results/unet_normal_visual/'
